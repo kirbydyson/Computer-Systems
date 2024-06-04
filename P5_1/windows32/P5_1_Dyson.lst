@@ -1,0 +1,210 @@
+Microsoft (R) Macro Assembler Version 14.16.27051.0	    03/13/24 23:36:20
+P5_1_Dyson.asm						     Page 1 - 1
+
+
+				; Author:                 Kirby Dyson
+				; Assignment Title:       P5_1, Weighted Average
+				; Assignment Description: computes the weighted average and sum of four grades
+
+				; Due Date:               3/13/2024
+				; Date Created:           3/10/2024
+				; Date Last Modified:     3/13/2024
+
+				.586                                       ; specify 32 bit processor
+				.MODEL FLAT                                ; specify memory model as flat
+
+				INCLUDE io.h                               ; header file for input/output
+			      C ; IO.H -- header file for I/O macros (listing suppressed)
+			      C .NOLIST      ; turn off listing
+			      C .LIST        ; begin listing
+			      C 
+
+				.STACK 4096                                ; set the size to 4096 bytes
+
+ 00000000			.DATA
+ 00000000 45 6E 74 65 72	prompt1 BYTE    "Enter grade 1", 0         ; message to get first grade
+	   20 67 72 61 64
+	   65 20 31 00
+ 0000000E 45 6E 74 65 72	prompt2 BYTE    "Enter weight 1", 0        ; message to get first weight
+	   20 77 65 69 67
+	   68 74 20 31 00
+ 0000001D 45 6E 74 65 72	prompt3 BYTE    "Enter grade 2", 0         ; message to get second grade
+	   20 67 72 61 64
+	   65 20 32 00
+ 0000002B 45 6E 74 65 72	prompt4 BYTE    "Enter weight 2", 0        ; message to get second weight
+	   20 77 65 69 67
+	   68 74 20 32 00
+ 0000003A 45 6E 74 65 72	prompt5 BYTE    "Enter grade 3", 0         ; message to get third grade
+	   20 67 72 61 64
+	   65 20 33 00
+ 00000048 45 6E 74 65 72	prompt6 BYTE    "Enter weight 3", 0        ; message to get third weight
+	   20 77 65 69 67
+	   68 74 20 33 00
+ 00000057 45 6E 74 65 72	prompt7 BYTE    "Enter grade 4", 0         ; message to get fourth grade
+	   20 67 72 61 64
+	   65 20 34 00
+ 00000065 45 6E 74 65 72	prompt8 BYTE    "Enter weight 4", 0        ; message to get fourth weight
+	   20 77 65 69 67
+	   68 74 20 34 00
+ 00000074 54 68 65 20 72	result  BYTE    "The result is", 0         ; message for displaying result 
+	   65 73 75 6C 74
+	   20 69 73 00
+ 00000082  00000014 [		string  BYTE    20 DUP (?)                 ; buffer to store the input
+	    00
+	   ]
+
+ 00000096 54 68 65 20 77	result2 BYTE    "The weighted sum is: "    ; message for displaying sum
+	   65 69 67 68 74
+	   65 64 20 73 75
+	   6D 20 69 73 3A
+	   20
+ 000000AB  0000000B [		sum     BYTE    11 DUP (?), 0dh            ; buffer to store the sum
+	    00
+	   ] 0D
+ 000000B7 54 68 65 20 61	result3 BYTE    "The average is: "         ; message for displaying average
+	   76 65 72 61 67
+	   65 20 69 73 3A
+	   20
+ 000000C7 00			avg     BYTE    11 DUP (?), 0              ; buffer to store the average
+
+ 000000D3 00000000		grade1  DWORD   11 DUP (?), 0              ; buffer to store grade1
+ 00000103 00000000		grade2  DWORD   11 DUP (?), 0              ; buffer to store grade2
+ 00000133 00000000		grade3  DWORD   11 DUP (?), 0              ; buffer to store grade3
+ 00000163 00000000		grade4  DWORD   11 DUP (?), 0              ; buffer to store grade4
+
+
+ 00000000			.CODE
+ 00000000			_MainProc PROC
+				        input   prompt1, string, 20        ; prompt user for first grade
+				        atod    string                     ; convert input to integer
+ 0000002D  A3 000000D3 R	        mov     grade1, eax                ; store first grade in buffer
+
+				        input   prompt2, string, 20        ; prompt user for first weight
+				        atod    string                     ; conver input to integer
+ 0000005F  8B D8		        mov     ebx, eax                   ; store first weight in scratch
+ 00000061  0F AF 05		        imul    eax, grade1                ; multiply grade by weight
+	   000000D3 R
+ 00000068  8B C8		        mov     ecx, eax                   ; store weighted sum in scratch
+
+				        input   prompt3, string, 20        ; prompt user for second grade
+				        atod    string                     ; convert input to integer
+ 00000097  A3 00000103 R	        mov     grade2, eax                ; store grade in buffer
+
+				        input   prompt4, string, 20        ; prompt user for second weight
+				        atod    string                     ; convert input to integer
+ 000000C9  03 D8		        add     ebx, eax                   ; add weights
+ 000000CB  0F AF 05		        imul    eax, grade2                ; multiply grade by weight
+	   00000103 R
+ 000000D2  03 C8		        add     ecx, eax                   ; add weighted sum
+
+				        input   prompt5, string, 20        ; prompt user for third grade
+				        atod    string                     ; convert input to integer
+ 00000101  A3 00000133 R	        mov     grade3, eax                ; store grade in buffer
+				        
+				        input   prompt6, string, 20        ; prompt user for third weight
+				        atod    string                     ; convert input to integer
+ 00000133  03 D8		        add     ebx, eax                   ; add weights
+ 00000135  0F AF 05		        imul    eax, grade3                ; multiply grade by weight
+	   00000133 R
+ 0000013C  03 C8		        add     ecx, eax                   ; add weighted sum
+
+				        input   prompt7, string, 20        ; prompt user for fourth grade
+				        atod    string                     ; convert input to integer
+ 0000016B  A3 00000163 R	        mov     grade4, eax                ; store grade in buffer
+				         
+				        input   prompt8, string, 20        ; prompt user for fourth weight
+				        atod    string                     ; convert input to integer
+ 0000019D  03 D8		        add     ebx, eax                   ; add weights
+ 0000019F  0F AF 05		        imul    eax, grade4                ; multiply grade by weight
+	   00000163 R
+ 000001A6  03 C8		        add     ecx, eax                   ; add weighted sum
+
+ 000001A8  8B C1		        mov     eax, ecx                   ; move weighted sum to eax
+ 000001AA  99			        cdq                                ; clear ebx
+ 000001AB  F7 FB		        idiv    ebx                        ; divide weighted sum by sum of weights
+				        dtoa    sum, ecx                   ; convert sum to ASCII characters
+				        dtoa    avg, eax                   ; convert average to ASCII character
+				   
+				        output   result, result2           ; display the results
+				      
+
+ 000001F6  2B C0		        sub     eax, eax                   ; exit with return code 0
+ 000001F8  C3			        ret                                ; return to calling code
+ 000001F9			_MainProc ENDP
+				END                                        ; end of source code
+
+Microsoft (R) Macro Assembler Version 14.16.27051.0	    03/13/24 23:36:20
+P5_1_Dyson.asm						     Symbols 2 - 1
+
+
+
+
+Macros:
+
+                N a m e                 Type
+
+atod . . . . . . . . . . . . . .	Proc
+atow . . . . . . . . . . . . . .	Proc
+dtoa . . . . . . . . . . . . . .	Proc
+input  . . . . . . . . . . . . .	Proc
+output . . . . . . . . . . . . .	Proc
+wtoa . . . . . . . . . . . . . .	Proc
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000193 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000001F9 Para	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+_MainProc  . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000001F9 Public
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000000h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+_getInput  . . . . . . . . . . .	L Near	 00000000 FLAT	External
+_showOutput  . . . . . . . . . .	L Near	 00000000 FLAT	External
+atodproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+atowproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+avg  . . . . . . . . . . . . . .	Byte	 000000C7 _DATA	
+dtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+grade1 . . . . . . . . . . . . .	DWord	 000000D3 _DATA	
+grade2 . . . . . . . . . . . . .	DWord	 00000103 _DATA	
+grade3 . . . . . . . . . . . . .	DWord	 00000133 _DATA	
+grade4 . . . . . . . . . . . . .	DWord	 00000163 _DATA	
+prompt1  . . . . . . . . . . . .	Byte	 00000000 _DATA	
+prompt2  . . . . . . . . . . . .	Byte	 0000000E _DATA	
+prompt3  . . . . . . . . . . . .	Byte	 0000001D _DATA	
+prompt4  . . . . . . . . . . . .	Byte	 0000002B _DATA	
+prompt5  . . . . . . . . . . . .	Byte	 0000003A _DATA	
+prompt6  . . . . . . . . . . . .	Byte	 00000048 _DATA	
+prompt7  . . . . . . . . . . . .	Byte	 00000057 _DATA	
+prompt8  . . . . . . . . . . . .	Byte	 00000065 _DATA	
+result2  . . . . . . . . . . . .	Byte	 00000096 _DATA	
+result3  . . . . . . . . . . . .	Byte	 000000B7 _DATA	
+result . . . . . . . . . . . . .	Byte	 00000074 _DATA	
+string . . . . . . . . . . . . .	Byte	 00000082 _DATA	
+sum  . . . . . . . . . . . . . .	Byte	 000000AB _DATA	
+wtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+
+	   0 Warnings
+	   0 Errors
