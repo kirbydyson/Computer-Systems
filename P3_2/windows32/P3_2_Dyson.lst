@@ -1,0 +1,132 @@
+Microsoft (R) Macro Assembler Version 14.16.27051.0	    02/18/24 19:44:58
+P3_2_Dyson.asm						     Page 1 - 1
+
+
+				; Author:                 Kirby Dyson
+				; Assignment Title:       P3_2, Add Three Values
+				; Assignment Description: P3_2_Dyson.asm - adds the sum of three numbers
+
+				; Due Date:               2/20/2024
+				; Date Created:           2/17/2024
+				; Date Last Modified:     2/18/2024
+
+				.586
+				.MODEL FLAT
+
+				INCLUDE io.h                             ; header file for input/output
+			      C ; IO.H -- header file for I/O macros (listing suppressed)
+			      C .NOLIST      ; turn off listing
+			      C .LIST        ; begin listing
+			      C 
+
+				.STACK 4096
+
+ 00000000			.DATA
+ 00000000 45 6E 74 65 72	prompt1 BYTE    "Enter first number", 0
+	   20 66 69 72 73
+	   74 20 6E 75 6D
+	   62 65 72 00
+ 00000013 45 6E 74 65 72	prompt2 BYTE    "Enter second number", 0
+	   20 73 65 63 6F
+	   6E 64 20 6E 75
+	   6D 62 65 72 00
+ 00000027 45 6E 74 72 65	prompt3 BYTE    "Entre third number", 0
+	   20 74 68 69 72
+	   64 20 6E 75 6D
+	   62 65 72 00
+ 0000003A  00000028 [		string  BYTE    40 DUP (?)
+	    00
+	   ]
+ 00000062 54 68 65 20 73	result  BYTE    "The sum is", 0
+	   75 6D 20 69 73
+	   00
+ 0000006D  0000000B [		sum     BYTE    11 DUP (?), 0
+	    00
+	   ] 00
+
+ 00000000			.CODE
+ 00000000			_MainProc PROC
+				        input   prompt1, string, 40      ; prompt user for first value
+				        atod    string                   ; convert user input to numeric value
+ 0000002D  8B D8		        mov     ebx, eax                 ; store first value to scratch
+
+				        input   prompt2, string, 40      ; prompt user for second value
+				        atod    string                   ; convert user input to numeric value
+ 0000005C  03 C3		        add     eax, ebx                 ; add first value to second value, as sum
+ 0000005E  8B D8		        mov     ebx, eax                 ; store second value to scratch
+
+				        input   prompt3, string, 40      ; prompt user for third value
+				        atod    string                   ; convert user input to numeric value
+ 0000008D  03 C3		        add     eax, ebx                 ; add third value to the sum
+				        
+				        dtoa    sum, eax                 ; convert sum to ASCII, store in "sum"
+				        output  result, sum              ; display results to stdout
+
+ 000000C0  2B C0		        sub     eax, eax                 ; exit with return code 0
+ 000000C2  C3			        ret                              ; return to calling code
+ 000000C3			_MainProc ENDP
+				END                                      ; end of source code
+
+Microsoft (R) Macro Assembler Version 14.16.27051.0	    02/18/24 19:44:58
+P3_2_Dyson.asm						     Symbols 2 - 1
+
+
+
+
+Macros:
+
+                N a m e                 Type
+
+atod . . . . . . . . . . . . . .	Proc
+atow . . . . . . . . . . . . . .	Proc
+dtoa . . . . . . . . . . . . . .	Proc
+input  . . . . . . . . . . . . .	Proc
+output . . . . . . . . . . . . .	Proc
+wtoa . . . . . . . . . . . . . .	Proc
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000079 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000000C3 Para	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+_MainProc  . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000000C3 Public
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000000h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+_getInput  . . . . . . . . . . .	L Near	 00000000 FLAT	External
+_showOutput  . . . . . . . . . .	L Near	 00000000 FLAT	External
+atodproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+atowproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+dtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+prompt1  . . . . . . . . . . . .	Byte	 00000000 _DATA	
+prompt2  . . . . . . . . . . . .	Byte	 00000013 _DATA	
+prompt3  . . . . . . . . . . . .	Byte	 00000027 _DATA	
+result . . . . . . . . . . . . .	Byte	 00000062 _DATA	
+string . . . . . . . . . . . . .	Byte	 0000003A _DATA	
+sum  . . . . . . . . . . . . . .	Byte	 0000006D _DATA	
+wtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+
+	   0 Warnings
+	   0 Errors
