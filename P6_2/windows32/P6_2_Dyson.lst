@@ -1,0 +1,141 @@
+Microsoft (R) Macro Assembler Version 14.16.27051.0	    03/19/24 22:49:18
+P6_2_Dyson.asm						     Page 1 - 1
+
+
+				; Author:                 Kirby Dyson
+				; Assignment Title:       P6_2, Sum Input Values
+				; Assignment Description: computes the sum of input values
+
+				; Due Date:               3/20/2024
+				; Date Created:           3/18/2024
+				; Date Last Modified:     3/19/2024
+
+				.586                                        ; specify 32 bit processor
+				.MODEL FLAT                                 ; specify memory model as flat
+
+				INCLUDE io.h                                ; header file for input/output
+			      C ; IO.H -- header file for I/O macros (listing suppressed)
+			      C .NOLIST      ; turn off listing
+			      C .LIST        ; begin listing
+			      C 
+
+				.STACK 4096                                 ; set size for 4096 bytes
+
+ 00000000			.DATA
+ 00000000 45 6E 74 65 72	prompt1 BYTE    "Enter value", 0            ; message to get values
+	   20 76 61 6C 75
+	   65 00
+ 0000000C  00000014 [		string  BYTE    20 DUP (?)                  ; buffer to store input
+	    00
+	   ]
+ 00000020 54 68 65 20 73	result  BYTE    "The sum is", 0             ; message for displaying sum
+	   75 6D 20 69 73
+	   00
+ 0000002B  0000000B [		sum     WORD    11 DUP (?), 0               ; buffer to store sum
+	    0000
+	   ] 0000
+ 00000043 54 68 65 20 23	result2 BYTE    "The # of zeroes are", 0    ; message for displaying # of zeros
+	   20 6F 66 20 7A
+	   65 72 6F 65 73
+	   20 61 72 65 00
+ 00000057  0000000B [		zeros   WORD    11 DUP (?), 0               ; buffer to store # of zeros
+	    0000
+	   ] 0000
+
+ 00000000			.CODE
+ 00000000			_MainProc PROC
+ 00000000  66| BB 0000		        mov     bx, 0                       ; initialize bx to 0
+ 00000004  66| BA 0000		        mov     dx, 0                       ; initialize dx to 0
+
+ 00000008			inLoop:
+				        input   prompt1, string, 20         ; prompt user for values
+				        atow    string                      ; convert input to integer
+ 00000035  66| 83 F8 00		        cmp     ax, 0                       ; compare value to zero
+ 00000039  75 08		        jnz     nonZero                     ; jump if input is positive
+ 0000003B  66| 42		        inc     dx                          ; increment # of zeros
+ 0000003D  66| 83 FA 0A		        cmp     dx, 10                      ; compare # of zeros to 10
+ 00000041  74 0C		        je      endLoop                     ; jump if there are 10 zeros
+
+ 00000043			nonZero:
+ 00000043  66| 03 D8		        add     bx, ax                      ; add value
+ 00000046  66| 81 FB 1388	        cmp     bx, 5000                    ; compare sum to 5000
+ 0000004B  7D 02		        jge     endLoop                     ; jump if sum is greater than 5000
+ 0000004D  E2 B9		        loop    inLoop                      ; loop again if sum is less than 5000
+
+ 0000004F			endLoop:
+				        wtoa    sum, bx                     ; convert sum to ASCII
+				        wtoa    zeros, dx                   ; convert # of zeros to ASCII
+				        output  result, sum                 ; display the sum
+				        output  result2, zeros              ; display the # of zeros
+
+ 000000B3  2B C0		        sub     eax, eax                    ; exit with return code 0
+ 000000B5  C3			        ret                                 ; return to calling code
+ 000000B6			_MainProc ENDP
+				END                                         ; end of source code
+
+Microsoft (R) Macro Assembler Version 14.16.27051.0	    03/19/24 22:49:18
+P6_2_Dyson.asm						     Symbols 2 - 1
+
+
+
+
+Macros:
+
+                N a m e                 Type
+
+atod . . . . . . . . . . . . . .	Proc
+atow . . . . . . . . . . . . . .	Proc
+dtoa . . . . . . . . . . . . . .	Proc
+input  . . . . . . . . . . . . .	Proc
+output . . . . . . . . . . . . .	Proc
+wtoa . . . . . . . . . . . . . .	Proc
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 0000006F Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000000B6 Para	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+_MainProc  . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000000B6 Public
+  inLoop . . . . . . . . . . . .	L Near	 00000008 _TEXT	
+  nonZero  . . . . . . . . . . .	L Near	 00000043 _TEXT	
+  endLoop  . . . . . . . . . . .	L Near	 0000004F _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000000h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+_getInput  . . . . . . . . . . .	L Near	 00000000 FLAT	External
+_showOutput  . . . . . . . . . .	L Near	 00000000 FLAT	External
+atodproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+atowproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+dtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+prompt1  . . . . . . . . . . . .	Byte	 00000000 _DATA	
+result2  . . . . . . . . . . . .	Byte	 00000043 _DATA	
+result . . . . . . . . . . . . .	Byte	 00000020 _DATA	
+string . . . . . . . . . . . . .	Byte	 0000000C _DATA	
+sum  . . . . . . . . . . . . . .	Word	 0000002B _DATA	
+wtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+zeros  . . . . . . . . . . . . .	Word	 00000057 _DATA	
+
+	   0 Warnings
+	   0 Errors
