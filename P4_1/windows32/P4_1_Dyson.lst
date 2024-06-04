@@ -1,0 +1,120 @@
+Microsoft (R) Macro Assembler Version 14.16.27051.0	    02/21/24 00:05:19
+P4_1_Dyson.asm						     Page 1 - 1
+
+
+				; Author:                 Kirby Dyson
+				; Assignment Title:       P4_1, Bocce Perimeter
+				; Assignment Description: computes the perimeter of a Bocce court
+
+				; Due Date:               2/23/2024
+				; Date Created:           2/20/2024
+				; Date Last Modified:     tbd
+
+				.586                                     ; specify 32 bit processor
+				.MODEL FLAT                              ; specify memory model as flat
+
+				INCLUDE io.h                             ; header file for input/output
+			      C ; IO.H -- header file for I/O macros (listing suppressed)
+			      C .NOLIST      ; turn off listing
+			      C .LIST        ; begin listing
+			      C 
+
+				.STACK 4096                              ; set the size to 4096 bytes
+
+ 00000000			.DATA
+ 00000000 45 6E 74 65 72	prompt1 BYTE    "Enter width", 0         ; message to get the width
+	   20 77 69 64 74
+	   68 00
+ 0000000C 45 6E 74 65 72	prompt2 BYTE    "Enter length", 0        ; message to get the length
+	   20 6C 65 6E 67
+	   74 68 00
+ 00000019  00000014 [		string  BYTE    20 DUP (?)               ; buffer to store the input
+	    00
+	   ]
+ 0000002D 54 68 65 20 70	result  BYTE    "The perimeter is", 0    ; message for displaying the result
+	   65 72 69 6D 65
+	   74 65 72 20 69
+	   73 00
+ 0000003E 00			per     BYTE    11 DUP (?), 0            ; buffer to store the perimeter
+
+ 00000000			.CODE
+ 00000000			_MainProc PROC
+				        input   prompt1, string, 20      ; prompt user for first value
+				        atow    string                   ; convert to integer
+ 0000002D  66| 8B D8		        mov     bx, ax                   ; store in memory
+
+				        input   prompt2, string, 20      ; prompt user for second value
+				        atow    string
+ 0000005D  66| 03 C3		        add     ax, bx
+ 00000060  66| 03 C0		        add     ax, ax
+				        
+				        wtoa    per, ax                 ; convert to ASCII characters
+				        output  result, per              ; output label and sum
+
+ 00000095  66| 2B C0		        sub     ax, ax                 ; exit with return code 0
+ 00000098  C3			        ret                              ; return to calling code
+ 00000099			_MainProc ENDP
+				END                                      ; end of source code
+
+Microsoft (R) Macro Assembler Version 14.16.27051.0	    02/21/24 00:05:19
+P4_1_Dyson.asm						     Symbols 2 - 1
+
+
+
+
+Macros:
+
+                N a m e                 Type
+
+atod . . . . . . . . . . . . . .	Proc
+atow . . . . . . . . . . . . . .	Proc
+dtoa . . . . . . . . . . . . . .	Proc
+input  . . . . . . . . . . . . .	Proc
+output . . . . . . . . . . . . .	Proc
+wtoa . . . . . . . . . . . . . .	Proc
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 0000004A Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000099 Para	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+_MainProc  . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000099 Public
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000000h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+_getInput  . . . . . . . . . . .	L Near	 00000000 FLAT	External
+_showOutput  . . . . . . . . . .	L Near	 00000000 FLAT	External
+atodproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+atowproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+dtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+per  . . . . . . . . . . . . . .	Byte	 0000003E _DATA	
+prompt1  . . . . . . . . . . . .	Byte	 00000000 _DATA	
+prompt2  . . . . . . . . . . . .	Byte	 0000000C _DATA	
+result . . . . . . . . . . . . .	Byte	 0000002D _DATA	
+string . . . . . . . . . . . . .	Byte	 00000019 _DATA	
+wtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+
+	   0 Warnings
+	   0 Errors
