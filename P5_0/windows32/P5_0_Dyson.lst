@@ -1,0 +1,163 @@
+Microsoft (R) Macro Assembler Version 14.16.27051.0	    03/13/24 19:40:35
+P5_0_Dyson.asm						     Page 1 - 1
+
+
+				; Author:                 Kirby Dyson
+				; Assignment Title:       P5_0, Calculate Average
+				; Assignment Description: computes the average of four exam scores
+
+				; Due Date:               3/13/2024
+				; Date Created:           3/10/2024
+				; Date Last Modified:     3/13/2024
+
+				.586                                            ; specify 32 bit processor
+				.MODEL FLAT                                     ; specify memory model as flat
+
+				INCLUDE io.h                                    ; header file for input/output
+			      C ; IO.H -- header file for I/O macros (listing suppressed)
+			      C .NOLIST      ; turn off listing
+			      C .LIST        ; begin listing
+			      C 
+
+				.STACK 4096                                     ; set the size to 4096 bytes
+
+ 00000000			.DATA
+ 00000000 45 6E 74 65 72	prompt1 BYTE    "Enter first exam score", 0     ; message to get first score
+	   20 66 69 72 73
+	   74 20 65 78 61
+	   6D 20 73 63 6F
+	   72 65 00
+ 00000017 45 6E 74 65 72	prompt2 BYTE    "Enter second exam score", 0    ; message to get second score
+	   20 73 65 63 6F
+	   6E 64 20 65 78
+	   61 6D 20 73 63
+	   6F 72 65 00
+ 0000002F 45 6E 74 65 72	prompt3 BYTE    "Enter third exam score", 0     ; message to get third score
+	   20 74 68 69 72
+	   64 20 65 78 61
+	   6D 20 73 63 6F
+	   72 65 00
+ 00000046 45 6E 74 65 72	prompt4 BYTE    "Enter fourth exam score", 0    ; message to get fourth score
+	   20 66 6F 75 72
+	   74 68 20 65 78
+	   61 6D 20 73 63
+	   6F 72 65 00
+ 0000005E  00000014 [		string  BYTE    20 DUP (?), 0                   ; buffer to store the input
+	    00
+	   ] 00
+ 00000073 54 68 65 20 72	result  BYTE    "The result is", 0              ; message for displaying result
+	   65 73 75 6C 74
+	   20 69 73 00
+ 00000081 54 68 65 20 73	result2 BYTE    "The sum is: "                  ; message for displaying sum
+	   75 6D 20 69 73
+	   3A 20
+ 0000008D  0000000B [		sum     BYTE    11 DUP (?), 0dh                 ; buffer to store the sum
+	    00
+	   ] 0D
+ 00000099 54 68 65 20 61	result3 BYTE    "The average is: "              ; message for displaying average
+	   76 65 72 61 67
+	   65 20 69 73 3A
+	   20
+ 000000A9 00			avg     BYTE     11 DUP (?), 0                  ; bugger to store the average
+
+
+ 00000000			.CODE
+ 00000000			_MainProc PROC
+				        input   prompt1, string, 20             ; prompt user for first score
+				        atod    string                          ; convert input to integer
+ 0000002D  8B D8		        mov     ebx, eax    ; store in memory   ; store first score in scratch
+
+				        input   prompt2, string, 20             ; prompt user for second score
+				        atod    string                          ; convert input to integer
+ 0000005C  03 D8		        add     ebx, eax                        ; add second value to sum
+
+				        input   prompt3, string, 20             ; prompt user for third score
+				        atod    string                          ; convert input to integer
+ 0000008B  03 D8		        add     ebx, eax                        ; add third score to sum
+
+				        input   prompt4, string, 20             ; prompt user for fourth score
+				        atod    string                          ; convert input to integer
+ 000000BA  03 D8		        add     ebx, eax                        ; add fourth score to sum
+
+				        dtoa    sum, ebx                        ; convert sum to ASCII
+ 000000D4  03 D8		        add     ebx, eax                        ; double fourth score
+ 000000D6  8B C3		        mov     eax, ebx                        ; move sum to eax
+ 000000D8  99			        cdq                                     ; clear ebx
+ 000000D9  BB 00000005		        mov     ebx, 5                          ; set the exams to divide by
+ 000000DE  F7 F3		        div     ebx                             ; divide sum by # of exams
+
+				        dtoa    avg, eax                        ; convert average to ASCII
+				        output  result, result2                 ; display the results
+
+ 00000111  2B C0		        sub     eax, eax                        ; exit with return code 0
+ 00000113  C3			        ret                                     ; return to calling code
+ 00000114			_MainProc ENDP
+				END                                             ; end of source code
+
+Microsoft (R) Macro Assembler Version 14.16.27051.0	    03/13/24 19:40:35
+P5_0_Dyson.asm						     Symbols 2 - 1
+
+
+
+
+Macros:
+
+                N a m e                 Type
+
+atod . . . . . . . . . . . . . .	Proc
+atow . . . . . . . . . . . . . .	Proc
+dtoa . . . . . . . . . . . . . .	Proc
+input  . . . . . . . . . . . . .	Proc
+output . . . . . . . . . . . . .	Proc
+wtoa . . . . . . . . . . . . . .	Proc
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 000000B5 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000114 Para	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+_MainProc  . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000114 Public
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000000h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+_getInput  . . . . . . . . . . .	L Near	 00000000 FLAT	External
+_showOutput  . . . . . . . . . .	L Near	 00000000 FLAT	External
+atodproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+atowproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+avg  . . . . . . . . . . . . . .	Byte	 000000A9 _DATA	
+dtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+prompt1  . . . . . . . . . . . .	Byte	 00000000 _DATA	
+prompt2  . . . . . . . . . . . .	Byte	 00000017 _DATA	
+prompt3  . . . . . . . . . . . .	Byte	 0000002F _DATA	
+prompt4  . . . . . . . . . . . .	Byte	 00000046 _DATA	
+result2  . . . . . . . . . . . .	Byte	 00000081 _DATA	
+result3  . . . . . . . . . . . .	Byte	 00000099 _DATA	
+result . . . . . . . . . . . . .	Byte	 00000073 _DATA	
+string . . . . . . . . . . . . .	Byte	 0000005E _DATA	
+sum  . . . . . . . . . . . . . .	Byte	 0000008D _DATA	
+wtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+
+	   0 Warnings
+	   0 Errors
