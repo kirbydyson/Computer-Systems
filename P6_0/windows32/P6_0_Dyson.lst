@@ -1,0 +1,154 @@
+Microsoft (R) Macro Assembler Version 14.16.27051.0	    03/19/24 21:31:58
+P6_0_Dyson.asm						     Page 1 - 1
+
+
+				; Author:                 Kirby Dyson
+				; Assignment Title:       P6_0, Incremental Sum and Average
+				; Assignment Description: computes the sum and average of all grades entered
+
+				; Due Date:               3/20/2024
+				; Date Created:           3/18/2024
+				; Date Last Modified:     3/19/2024
+
+
+				.586                                           ; specify 32 bit processor
+				.MODEL FLAT                                    ; specify memory model as flat
+
+				INCLUDE io.h                                   ; header file for input/output
+			      C ; IO.H -- header file for I/O macros (listing suppressed)
+			      C .NOLIST      ; turn off listing
+			      C .LIST        ; begin listing
+			      C 
+
+				.STACK 4096                                    ; set the size to 4096 bytes
+
+ 00000000			.DATA
+ 00000000 45 6E 74 65 72	prompt1 BYTE    "Enter number of grades", 0    ; message to get # of grades
+	   20 6E 75 6D 62
+	   65 72 20 6F 66
+	   20 67 72 61 64
+	   65 73 00
+ 00000017 45 6E 74 65 72	prompt2 BYTE    "Enter grade", 0               ; message to get grades
+	   20 67 72 61 64
+	   65 00
+ 00000023  00000014 [		string  BYTE    20 DUP (?)                     ; buffer to store input
+	    00
+	   ]
+ 00000037 54 68 65 20 73	result  BYTE    "The sum is", 0                ; message for displaying sum
+	   75 6D 20 69 73
+	   00
+ 00000042  0000000B [		sum     DWORD   11 DUP (?), 0                  ; buffer to store sum
+	    00000000
+	   ] 00000000
+ 00000072 54 68 65 20 61	result2 BYTE    "The average is", 0            ; message for displaying average
+	   76 65 72 61 67
+	   65 20 69 73 00
+ 00000081  0000000B [		avg     DWORD   11 DUP (?), 0                  ; buffer to store average
+	    00000000
+	   ] 00000000
+ 000000B1  0000000B [		nums    DWORD   11 DUP (?), 0                  ; buffer to store # of grades
+	    00000000
+	   ] 00000000
+
+
+ 00000000			.CODE
+ 00000000			_MainProc PROC
+ 00000000			nonZero:     
+				        input   prompt1, string, 20            ; prompt user for # of grades
+				        atod    string                         ; convert input to integer
+ 0000002D  8B D8		        mov     ebx, eax                       ; store number in memory
+ 0000002F  83 FB 00		        cmp     ebx, 0                         ; compare number to zero
+ 00000032  7E CC		        jle     nonZero                        ; loop again if number is not 
+				                                               ; positive
+
+ 00000034			grades:        
+				        input   prompt2, string, 20            ; prompt user for grades
+				        atod    string                         ; convert input to integer
+ 00000061  01 05 00000042 R	        add     sum, eax                       ; add grade to sum
+ 00000067  8B 0D 00000042 R	        mov     ecx, sum                       ; move sum to ecx
+ 0000006D  FF 05 000000B1 R	        inc     nums                           ; increment # of grades
+ 00000073  A1 00000042 R	        mov     eax, sum                       ; move sum to eax
+ 00000078  99			        cdq                                    ; clear edx
+ 00000079  F7 3D 000000B1 R	        idiv    nums                           ; divide sum by # of grades
+
+				        dtoa    string, ecx                    ; convert sum to ASCII
+				        output  result, string                 ; display the sum
+				        dtoa    string, eax                    ; convert average to ASCII
+				        output  result2, string                ; display the average
+
+ 000000E1  39 1D 000000B1 R	        cmp     nums, ebx                      ; compares # of grades
+ 000000E7  0F 8C FFFFFF47	        jl      grades                         ; loop again if more grades
+				                                               ; should be entered
+
+ 000000ED  2B C0		        sub     eax, eax                       ; exit with return code 0
+ 000000EF  C3			        ret                                    ; return to calling code
+ 000000F0			_MainProc ENDP
+				END                                            ; end of source code
+
+Microsoft (R) Macro Assembler Version 14.16.27051.0	    03/19/24 21:31:58
+P6_0_Dyson.asm						     Symbols 2 - 1
+
+
+
+
+Macros:
+
+                N a m e                 Type
+
+atod . . . . . . . . . . . . . .	Proc
+atow . . . . . . . . . . . . . .	Proc
+dtoa . . . . . . . . . . . . . .	Proc
+input  . . . . . . . . . . . . .	Proc
+output . . . . . . . . . . . . .	Proc
+wtoa . . . . . . . . . . . . . .	Proc
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 000000E1 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000000F0 Para	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+_MainProc  . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000000F0 Public
+  nonZero  . . . . . . . . . . .	L Near	 00000000 _TEXT	
+  grades . . . . . . . . . . . .	L Near	 00000034 _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000000h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+_getInput  . . . . . . . . . . .	L Near	 00000000 FLAT	External
+_showOutput  . . . . . . . . . .	L Near	 00000000 FLAT	External
+atodproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+atowproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+avg  . . . . . . . . . . . . . .	DWord	 00000081 _DATA	
+dtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+nums . . . . . . . . . . . . . .	DWord	 000000B1 _DATA	
+prompt1  . . . . . . . . . . . .	Byte	 00000000 _DATA	
+prompt2  . . . . . . . . . . . .	Byte	 00000017 _DATA	
+result2  . . . . . . . . . . . .	Byte	 00000072 _DATA	
+result . . . . . . . . . . . . .	Byte	 00000037 _DATA	
+string . . . . . . . . . . . . .	Byte	 00000023 _DATA	
+sum  . . . . . . . . . . . . . .	DWord	 00000042 _DATA	
+wtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+
+	   0 Warnings
+	   0 Errors
